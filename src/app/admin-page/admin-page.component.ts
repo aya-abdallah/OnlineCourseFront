@@ -35,6 +35,7 @@ export class AdminPageComponent implements OnInit {
   editedCategory: object;
   editedCourse: object;
   token: string = "";
+  path:any;
   @ViewChild('container', { read: ViewContainerRef, static: false }) container: ViewContainerRef;
   @ViewChild('category', { read: ViewContainerRef, static: false }) category: ViewContainerRef;
 
@@ -57,6 +58,7 @@ export class AdminPageComponent implements OnInit {
       category: ['', Validators.required],
       description: ['', Validators.required],
       points: ['', Validators.required],
+      file: ['', Validators.required],
     });
   }
 
@@ -76,6 +78,14 @@ export class AdminPageComponent implements OnInit {
     this.getAllCourses();
     this.getAllCategories();
   }
+
+  onFileSelect(event) {
+    if (event.target.files.length > 0) {
+       this.path = event.target.files[0];
+      // this.courseForm.get('file').setValue(path);
+    }
+  }
+
   addAdmin(data) {
     const newAdmin = { firstName: data.firstName, lastName: data.lastName, password: data.password, email: data.email }
     this.onlineCoursesService.addAdmin(newAdmin);
@@ -89,6 +99,8 @@ export class AdminPageComponent implements OnInit {
     this.closeCategoryModal();
   }
   addCourse(data) {
+    console.log(data);
+    data.file=this.path;
     this.onlineCoursesService.addCourse(data).subscribe(() => {
       this.getAllCourses();
     });

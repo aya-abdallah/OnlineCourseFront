@@ -28,6 +28,12 @@ export class OnlineCoursesService {
   }
 
   addCourse(data) {
+    // const formData: FormData = new FormData();
+    // formData.append('photo',data.file);
+    // formData.append('name',data.name);
+    // formData.append('description',data.description);
+    // formData.append('category',data.category);
+    // formData.append('points',data.points);
     return this.http.post(`${this.uri}/courses/`, data, this.httpOptions);
   }
   validateUser(data) {

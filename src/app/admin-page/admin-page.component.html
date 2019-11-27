@@ -206,8 +206,8 @@
                         </div>
                         <div class="form-group">
                             <label>Photo</label>
-                            <input class="form-control" type="file" class="form-control-file"
-                                id="exampleFormControlFile1">
+                            <input ngModel formControlName="file" class="form-control" type="file" class="form-control-file"
+                            (change)="onFileSelect($event)" id="exampleFormControlFile1">
                         </div>
 
                         <div class="col-md-12 text-center mb-3">
@@ -321,9 +321,9 @@
 
     <!-- list courses -->
     <div class="container">
-        <div #container class="row"> </div>
+        <div #container> </div>
         <!-- list all categories -->
-        <div class="col-4  mb-2 bg-dark text-white rounded my-2 my-sm-0 " style="position: fixed;right:0;top:20%">
+        <div class="col-3  mb-2 bg-dark text-white rounded my-2 my-sm-0 " style="position: fixed;right:0;top:20%">
             <h3>All categories</h3>
             <div #category> </div>
         </div>
