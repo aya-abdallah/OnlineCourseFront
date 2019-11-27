@@ -1,0 +1,37 @@
+<div class="container">
+    <div class="row">
+        <div class="col-3 card m-3" style="width: 18rem;" *ngFor="let course of coursesList">
+            <img src="http://localhost:3000/{{course.courseId.photo}}" width="70" height="250" class="card-img-top"
+                alt="{{course.courseId.name}}">
+            <div class="card-body">
+                <h5 class="card-title">{{course.courseId.name}}</h5>
+                <strong>{{course.courseId.points}} Points</strong>
+                <p class="card-text">Description : {{course.courseId.description}}</p>
+                <h6 class="card-title">categories: </h6>
+                <div class="row">
+                    <div *ngFor="let c of course.categoryId">
+                        <div class="p-1 mr-1 mb-2 bg-info text-white rounded float-left">{{c.name}}</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <input *ngIf="!registeredCourses.includes(course.courseId._id)" type="button"
+                        class="btn btn-dark mr-1 " id="{{course.courseId._id}}"
+                        (click)="_parent.registerCourse($event,course.courseId._id)" value="Register">
+                    <input *ngIf="registeredCourses.includes(course.courseId._id)" type="button"
+                        class="btn btn-dark mr-1 " id="{{course.courseId._id}}"
+                        (click)="_parent.registerCourse($event,course.courseId._id)" value="Remove Register">
+
+                    <input *ngIf="!compeletedCourses.includes(course.courseId._id)" type="button"
+                        class="btn btn-dark mr-1" id="{{course.courseId._id}}"
+                        (click)="_parent.completeCourse(course.courseId._id,course.courseId.points)" value="complete">
+
+                    <input *ngIf="compeletedCourses.includes(course.courseId._id)" disabled type="button"
+                        class="btn btn-dark mr-1 " value="compeleted">
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>

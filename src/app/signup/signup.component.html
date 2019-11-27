@@ -1,0 +1,92 @@
+<nav class="navbar navbar-dark bg-dark">
+   <a class="navbar-brand" href="/">
+      <img src="../../assets/images/logo.png" width="50px" height="50px" />
+      Online Courses</a>
+   <form class="form-inline my-2 my-lg-0" #userlogin="ngForm">
+      <input class="form-control mr-sm-3" type="search" placeholder="Search" aria-label="Search">
+      <a class="btn btn-outline-success mr-sm-3 my-2 my-sm-0" routerLink="/login">Login</a>
+      <a class="btn btn-outline-success my-2 my-sm-0" routerLink="/signup">Signup</a></form>
+</nav>
+<br><br>
+
+<div class="container">
+   <div class="row">
+      <div class="col-md-5 mx-auto">
+         <div>
+            <div class="myform form ">
+               <div class="logo mb-3">
+                  <div class="col-md-12 text-center">
+                     <h1>Signup</h1>
+                  </div>
+               </div>
+               <form name="registration" [formGroup]="ngForm" novalidate (ngSubmit)="submitUser(ngForm.value)">
+                  <div class="form-group">
+                     <label for="exampleInputEmail1">First Name</label>
+                     <input ngModel required type="text" formControlName="firstName" class="form-control" id="firstname"
+                        aria-describedby="emailHelp" placeholder="Enter Firstname">
+                  </div>
+                  <div
+                     *ngIf="ngForm.controls['firstName'].invalid && (ngForm.controls['firstName'].dirty || ngForm.controls['firstName'].touched)"
+                     class="alert alert-danger">
+                     <div *ngIf="ngForm.controls['firstName'].errors.required">
+                        firstName is required.
+                     </div>
+                  </div>
+                  <div class="form-group">
+                     <label for="exampleInputEmail1">Last Name</label>
+                     <input ngModel required type="text" formControlName="lastName" class="form-control" id="lastname"
+                        aria-describedby="emailHelp" placeholder="Enter Lastname">
+                  </div>
+                  <div
+                     *ngIf="ngForm.controls['lastName'].invalid && (ngForm.controls['lastName'].dirty || ngForm.controls['lastName'].touched)"
+                     class="alert alert-danger">
+                     <div *ngIf="ngForm.controls['lastName'].errors.required">
+                        lastName is required.
+                     </div>
+                  </div>
+                  <div class="form-group">
+                     <label for="exampleInputEmail1">Email address</label>
+                     <input ngModel required type="email" formControlName="email" class="form-control" id="email"
+                        aria-describedby="emailHelp" placeholder="Enter email">
+                  </div>
+                  <div
+                     *ngIf="ngForm.controls['email'].invalid && (ngForm.controls['email'].dirty || ngForm.controls['email'].touched)"
+                     class="alert alert-danger">
+                     <div *ngIf="ngForm.controls['email'].errors.required">
+                        email is required.
+                     </div>
+                  </div>
+                  <div class="form-group">
+                     <label for="exampleInputEmail1">Password</label>
+                     <input ngModel required type="password" formControlName="password" id="password"
+                        class="form-control" aria-describedby="emailHelp" placeholder="Enter Password">
+                  </div>
+                  <div
+                     *ngIf="ngForm.controls['password'].invalid && (ngForm.controls['password'].dirty || ngForm.controls['password'].touched)"
+                     class="alert alert-danger">
+                     <div *ngIf="ngForm.controls['password'].errors.required">
+                        password is required.
+                     </div>
+                  </div>
+                  <div class="col-md-12 text-center mb-3">
+
+                     <button type="submit" [disabled]="ngForm.pristine || ngForm.invalid"
+                        class=" btn btn-block mybtn btn-primary tx-tfm">
+                        Signup </button>
+                  </div>
+
+                  <div *ngIf="userSubmitted" class="alert alert-info" role="alert">
+                     {{userSubmitted}}
+                  </div>
+                  <div class="col-md-12 ">
+                     <div class="form-group">
+                        <p class="text-center"><a routerLink="/login" id="signin">Already have an account?</a></p>
+                     </div>
+                  </div>
+
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

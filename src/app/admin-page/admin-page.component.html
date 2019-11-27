@@ -1,0 +1,334 @@
+<div *ngIf="token">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+        integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+
+    <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+        <a class="navbar-brand" href="#">Online Courses</a>
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-3" type="search" placeholder="Search" aria-label="Search">
+            <strong class=" mr-sm-3 my-2 my-sm-0"> {{currentUser}} </strong>
+            <button class="btn btn-outline-success my-2 my-sm-0 m-3" (click)="openAdminModal()">Add Admin</button>
+            <button class="btn btn-outline-success my-2 my-sm-0 m-3" (click)="openUsersModal()">ListUsers</button>
+            <button class="btn btn-outline-success my-2 my-sm-0" (click)="logout()" routerLink="/login"
+                type="submit">Logout</button>
+        </form>
+    </nav>
+    <br><br>
+
+    <div class="backdrop" [ngStyle]="{'display':backdropDisplay}"></div>
+    <!-- admin modal -->
+    <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':display}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add New Admin</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="closeAdminDialog()"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="container">
+                        <div class="row">
+
+                            <div class="myform form ">
+
+                                <form name="registration" [formGroup]="adminForm" novalidate
+                                    (ngSubmit)="addAdmin(adminForm.value)">
+                                    <div class="form-group">
+                                        <label>First Name</label>
+                                        <input ngModel required type="text" formControlName="firstName"
+                                            class="form-control" id="firstname" placeholder="Enter Firstname">
+                                    </div>
+                                    <div *ngIf="adminForm.controls['firstName'].invalid && (adminForm.controls['firstName'].dirty || adminForm.controls['firstName'].touched)"
+                                        class="alert alert-danger">
+                                        <div *ngIf="adminForm.controls['firstName'].errors.required">
+                                            firstName is required.
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Last Name</label>
+                                        <input ngModel required type="text" formControlName="lastName"
+                                            class="form-control" id="lastname" placeholder="Enter Lastname">
+                                    </div>
+                                    <div *ngIf="adminForm.controls['lastName'].invalid && (adminForm.controls['lastName'].dirty || adminForm.controls['lastName'].touched)"
+                                        class="alert alert-danger">
+                                        <div *ngIf="adminForm.controls['lastName'].errors.required">
+                                            lastName is required.
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Email address</label>
+                                        <input ngModel required type="email" formControlName="email"
+                                            class="form-control" id="email" placeholder="Enter email">
+                                    </div>
+                                    <div *ngIf="adminForm.controls['email'].invalid && (adminForm.controls['email'].dirty || adminForm.controls['email'].touched)"
+                                        class="alert alert-danger">
+                                        <div *ngIf="adminForm.controls['email'].errors.required">
+                                            email is required.
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Password</label>
+                                        <input ngModel required type="password" formControlName="password" id="password"
+                                            class="form-control" placeholder="Enter Password">
+                                    </div>
+                                    <div *ngIf="adminForm.controls['password'].invalid && (adminForm.controls['password'].dirty || adminForm.controls['password'].touched)"
+                                        class="alert alert-danger">
+                                        <div *ngIf="adminForm.controls['password'].errors.required">
+                                            password is required.
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 text-center mb-3">
+                                        <button type="submit" [disabled]="adminForm.pristine || adminForm.invalid"
+                                            class=" btn btn-block mybtn btn-primary tx-tfm">
+                                            Signup </button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" (click)="closeAdminDialog()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end of modal -->
+
+
+    <!-- users modal -->
+    <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':usersDisplay}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">All Users</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="closeUsersModal()"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let user of allUsers">
+                                <td>{{user.firstName}} {{user.lastName}}</td>
+                                <td>{{user.email}}</td>
+                                <td><input type="button" id="{{user._id}}" *ngIf="user.isActive"
+                                        class="btn btn-dark m-3" (click)="activeUserToggle($event)" value="disactive">
+                                    <input type="button" id="{{user._id}}" *ngIf="!user.isActive"
+                                        class="btn btn-dark m-3" (click)="activeUserToggle($event)" value="active">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" (click)="closeUsersModal()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end of modal -->
+
+
+    <!-- category modal -->
+    <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':categoryDisplay}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add Category</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="closeCategoryModal()"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <form name="registration" [formGroup]="categoryForm" novalidate
+                        (ngSubmit)="addCategory(categoryForm.value)">
+                        <div class="form-group">
+                            <label> Name</label>
+                            <input ngModel required type="text" formControlName="name" class="form-control" id="name"
+                                placeholder="Enter category name">
+                        </div>
+
+                        <div class="col-md-12 text-center mb-3">
+                            <button type="submit" [disabled]="categoryForm.pristine || categoryForm.invalid"
+                                class=" btn btn-block mybtn btn-primary tx-tfm">
+                                Add </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" (click)="closeCategoryModal()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end of modal -->
+
+    <!-- course modal -->
+    <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':courseDisplay}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add Course</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="closeCourseModal()"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <form name="registration" [formGroup]="courseForm" novalidate
+                        (ngSubmit)="addCourse(courseForm.value)">
+                        <div class="form-group">
+                            <label> Name</label>
+                            <input ngModel required type="text" formControlName="name" class="form-control" id="name"
+                                placeholder="Enter course name">
+                        </div>
+                        <div class="form-group">
+                            <label> category</label>
+                            <ng-multiselect-dropdown ngModel class="form-control" formControlName="category"
+                                [placeholder]="'select category'" [data]="categoriesList" [settings]="dropdownSettings">
+                            </ng-multiselect-dropdown>
+                        </div>
+                        <div class="form-group">
+                            <label>points</label>
+                            <input ngModel required type="number" formControlName="points" class="form-control"
+                                id="points" min="50" max="500">
+                        </div>
+                        <div class="form-group">
+                            <label> Description</label>
+                            <textarea ngModel class="form-control" formControlName="description"
+                                id="exampleFormControlTextarea1" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Photo</label>
+                            <input class="form-control" type="file" class="form-control-file"
+                                id="exampleFormControlFile1">
+                        </div>
+
+                        <div class="col-md-12 text-center mb-3">
+                            <button type="submit" [disabled]="courseForm.pristine || courseForm.invalid"
+                                class=" btn btn-block mybtn btn-primary tx-tfm">
+                                Add </button>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" (click)="closeCourseModal()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end of modal -->
+
+
+
+    <!-- edit course modal -->
+    <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':editCourseDisplay}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Course</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="closeEditCourseModal()"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body" *ngIf="editedCourse">
+                    <form name="registration" [formGroup]="editCourseForm" novalidate
+                        (ngSubmit)="editCourse(editCourseForm.value)" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label> Name</label>
+                            <input ngModel required type="text" formControlName="name" class="form-control" id="name"
+                                [ngModel]="editedCourse.courseId.name">
+                        </div>
+                        <div class="form-group">
+                            <label> category</label>
+                            <ng-multiselect-dropdown ngModel required class="form-control" formControlName="category"
+                                [placeholder]="'select category'" [data]="categoriesList" [settings]="dropdownSettings"
+                                [(ngModel)]="selectedCategories">
+                            </ng-multiselect-dropdown>
+                        </div>
+                        <div class="form-group">
+                            <label> points</label>
+                            <input ngModel required type="number" formControlName="points" class="form-control"
+                                id="points" min="50" max="500" [ngModel]="editedCourse.courseId.points">
+                        </div>
+                        <div class="form-group">
+                            <label> Description</label>
+                            <textarea ngModel required class="form-control" formControlName="description"
+                                [ngModel]="editedCourse.courseId.description" id="description" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Photo</label>
+                            <input class="form-control" type="file" class="form-control-file">
+                        </div>
+
+                        <div class="col-md-12 text-center mb-3">
+                            <button type="submit" [disabled]="editCourseForm.invalid"
+                                class=" btn btn-block mybtn btn-primary tx-tfm">
+                                Edit </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" (click)="closeCourseModal()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end of modal -->
+
+
+    <!-- edit category modal -->
+    <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':editCategoryDisplay}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Category</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="closeEditCategoryModal()"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <form name="registration" [formGroup]="categoryForm" novalidate
+                        (ngSubmit)="editCategory(categoryForm.value)">
+                        <div class="form-group">
+                            <label> Name</label>
+                            <input ngModel type="text" formControlName="name" class="form-control" id="name"
+                                *ngIf="editedCategory" [ngModel]="editedCategory.name">
+                        </div>
+                        <div class="col-md-12 text-center mb-3">
+                            <button type="submit" [disabled]="categoryForm.pristine || categoryForm.invalid"
+                                class=" btn btn-block mybtn btn-primary tx-tfm">
+                                Edit </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" (click)="closeEditCategoryModal()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end of modal -->
+
+    <button type="button" class="btn btn-dark m-3 mr-sm-3" (click)="openCategoryModal()"> Add Category</button>
+    <button type="button" class="btn btn-dark m-3 mr-sm-3" (click)="openCourseModal()"> Add Course</button>
+    <br>
+
+    <!-- list courses -->
+    <div class="container">
+        <div #container class="row"> </div>
+        <!-- list all categories -->
+        <div class="col-4  mb-2 bg-dark text-white rounded my-2 my-sm-0 " style="position: fixed;right:0;top:20%">
+            <h3>All categories</h3>
+            <div #category> </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="!token">
+    <h1>Error 404 Page Not Found</h1>
+</div>

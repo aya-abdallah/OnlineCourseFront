@@ -1,0 +1,26 @@
+<div *ngIf="coursesList?.length > 0" class="container">
+    <div class="row">
+        <div class="col-3 card m-3" style="width: 18rem;"
+            *ngFor="let course of coursesList |paginate: { itemsPerPage: 4, currentPage: p }">
+            <img src="http://localhost:3000/{{course.courseId.photo}}" width="70" height="250" class="card-img-top"
+                alt="{{course.courseId.name}}">
+            <div class="card-body">
+                <h5 class="card-title">{{course.courseId.name}}</h5>
+                <p class="card-text">Description : {{course.courseId.description}}</p>
+                <h6 class="card-title">categories: </h6>
+                <div class="row">
+                    <div *ngFor="let c of course.categoryId">
+                        <div class="p-1 mr-1 mb-2 bg-info text-white rounded float-left">{{c.name}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <pagination-controls (pageChange)="p = $event"></pagination-controls>
+    </div>
+</div>
+
+<div *ngIf="!coursesList?.length > 0">
+    <h1>No Courses Found!!</h1>
+</div>

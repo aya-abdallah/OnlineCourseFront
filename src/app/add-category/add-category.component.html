@@ -1,0 +1,10 @@
+<div *ngIf="!categoriesList?.length > 0"> No category Found!</div>
+<div *ngIf="categoriesList?.length > 0">
+    <div class="float-left m-sm-1" *ngFor="let category of categoriesList">
+        <button class="btn btn-light">{{category.name}}
+            <a class=" text-primary" (click)="_parent.openEditCategoryModal(category)"><i
+                    class="fas fa-edit mr-1"></i></a>
+            <a class=" text-primary" (click)="_parent.deleteCategory(category)"><i class="fas fa-trash"></i></a>
+        </button>
+    </div>
+</div>

@@ -1,0 +1,30 @@
+<nav class="navbar navbar-dark bg-dark">
+      <a class="navbar-brand" href="/">
+            <img src="../../assets/images/logo.png" width="50px" height="50px" />
+            Online Courses</a>
+      <form class="form-inline my-2 my-lg-0" #userlogin="ngForm">
+            <a class="btn btn-outline-success mr-sm-3 my-2 my-sm-0" routerLink="/login">Login</a>
+            <a class="btn btn-outline-success my-2 my-sm-0" routerLink="/signup">Signup</a>
+      </form>
+</nav>
+<br><br>
+<!-- list courses -->
+<div class="container">
+      <div class="row">
+            <div class="col-9">
+                  <div class="form-group">
+                        <select class="form-control form-control-lg" (change)="filterCourses($event)">
+                              <option value="all">All Category</option>
+                              <option *ngFor="let category of categoriesList" value="{{category._id}}">
+                                    {{category.name}}
+                              </option>
+                        </select>
+                  </div>
+            </div>
+
+      </div>
+      <div #container> </div>
+      <h1 *ngIf="!allCourses?.length > 0">
+            No Courses Found
+      </h1>
+</div>
