@@ -35,7 +35,7 @@ export class AdminPageComponent implements OnInit {
   editedCategory: object;
   editedCourse: object;
   token: string = "";
-  path:any;
+  path: any = "";
   @ViewChild('container', { read: ViewContainerRef, static: false }) container: ViewContainerRef;
   @ViewChild('category', { read: ViewContainerRef, static: false }) category: ViewContainerRef;
 
@@ -53,13 +53,20 @@ export class AdminPageComponent implements OnInit {
     this.categoryForm = this.fb.group({
       name: ['', Validators.required]
     });
-    this.courseForm = this.editCourseForm = this.fb.group({
+    this.courseForm = this.fb.group({
       name: ['', Validators.required],
       category: ['', Validators.required],
       description: ['', Validators.required],
       points: ['', Validators.required],
       file: ['', Validators.required],
     });
+    this.editCourseForm = this.fb.group({
+      name: ['', Validators.required],
+      category: ['', Validators.required],
+      description: ['', Validators.required],
+      points: ['', Validators.required],
+    });
+
   }
 
   ngOnInit() {
@@ -81,7 +88,7 @@ export class AdminPageComponent implements OnInit {
 
   onFileSelect(event) {
     if (event.target.files.length > 0) {
-       this.path = event.target.files[0];
+      this.path = event.target.files[0];
       // this.courseForm.get('file').setValue(path);
     }
   }
@@ -100,17 +107,29 @@ export class AdminPageComponent implements OnInit {
   }
   addCourse(data) {
     console.log(data);
-    data.file=this.path;
+    data.file = this.path;
     this.onlineCoursesService.addCourse(data).subscribe(() => {
       this.getAllCourses();
     });
     this.closeCourseModal();
+    this.path = "";
   }
   editCourse(newCourse) {
-    this.onlineCoursesService.editCourse(newCourse, this.editedCourse["courseId"]["_id"]).subscribe(() => {
+    console.log("e = ", this.editedCourse)
+    let isPhotoChanged;
+    if (this.path !== "") {
+      newCourse.file = this.path;
+      console.log('1-', this.path)
+      isPhotoChanged = true;
+    }
+    else {
+      isPhotoChanged = false
+    }
+    this.onlineCoursesService.editCourse(newCourse, isPhotoChanged, this.editedCourse["courseId"]["_id"]).subscribe(() => {
       this.getAllCourses();
     })
     this.closeEditCourseModal();
+    this.path = "";
   }
   deleteCourse(event) {
     this.onlineCoursesService.deleteCourse(event.target.id).subscribe(() => {
@@ -174,6 +193,7 @@ export class AdminPageComponent implements OnInit {
   openEditCourseModal(course) {
     this.editedCourse = course;
     this.selectedCategories = course.categoryId;
+    console.log("form = ", this.editCourseForm);
     console.log("edit course = ", this.editedCourse);
     this.backdropDisplay = 'block';
     this.editCourseDisplay = 'block';

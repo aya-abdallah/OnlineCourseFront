@@ -8,6 +8,7 @@ import { CookieService } from 'ngx-cookie-service';
 export class OnlineCoursesService {
 
   uri = 'http://localhost:3000/api';
+  // formData: FormData = new FormData();
   constructor(private http: HttpClient, private cookieService: CookieService) {
   }
 
@@ -28,13 +29,16 @@ export class OnlineCoursesService {
   }
 
   addCourse(data) {
-    // const formData: FormData = new FormData();
-    // formData.append('photo',data.file);
-    // formData.append('name',data.name);
-    // formData.append('description',data.description);
-    // formData.append('category',data.category);
-    // formData.append('points',data.points);
-    return this.http.post(`${this.uri}/courses/`, data, this.httpOptions);
+    const formData: FormData = new FormData();
+    formData.append('photo', data.file, data.file.name);
+    formData.append('name', data.name);
+    formData.append('description', data.description);
+    formData.append('category', JSON.stringify(data.category));
+    formData.append('points', data.points);
+    console.log("data cat = ", data.category);
+    console.log("data cat = ", formData.get('category'));
+
+    return this.http.post(`${this.uri}/courses/`, formData, this.httpOptions);
   }
   validateUser(data) {
     return this.http.post(`${this.uri}/users/login`, data, this.httpOptions);
@@ -80,8 +84,15 @@ export class OnlineCoursesService {
   editCategory(categoryName, id) {
     return this.http.put(`${this.uri}/categories/${id}`, { name: categoryName }, this.httpOptions);
   }
-  editCourse(newCourse, id) {
-    return this.http.put(`${this.uri}/courses/${id}`, newCourse, this.httpOptions);
+  editCourse(newCourse, isPhotoChanged, id) {
+    const formData: FormData = new FormData();
+    if (isPhotoChanged) formData.append('photo', newCourse.file, newCourse.file.name);
+
+    formData.append('name', newCourse.name);
+    formData.append('description', newCourse.description);
+    formData.append('category', JSON.stringify(newCourse.category));
+    formData.append('points', newCourse.points);
+    return this.http.put(`${this.uri}/courses/${id}`, formData, this.httpOptions);
   }
   registerCourse(data) {
     return this.http.post(`${this.uri}/registercourses`, data, this.httpOptions);
